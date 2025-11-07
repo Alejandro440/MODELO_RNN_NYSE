@@ -1,0 +1,60 @@
+name: entrenamiento
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Preprocesar índice
+        run: |
+          mkdir -p data/indices_proc
+          python "0.PREPROCESAMIENTO_INDICE.py" --in data/indices_raw --out data/indices_proc
+
+      - name: Variables técnicas
+        run: |
+          mkdir -p data/acciones_proc
+          python "1.CREACION_VARIABLES.py" --in data/raw --out data/acciones_proc
+
+      - name: Variable objetivo
+        run: |
+          mkdir -p data/acciones_var
+          python "2.VARIABLE_OBJETIVO(2).py" --in data/acciones_proc --out data/acciones_var
+
+      - name: Incorporar índice
+        run: |
+          mkdir -p data/acciones_merged
+          python "3.INCOPORACION_DE_INDICE(2).py" \
+            --stocks data/acciones_var \
+            --index data/indices_proc/SP500.csv \
+            --out data/acciones_merged
+
+      - name: Entrenar modelo
+        run: |
+          mkdir -p models
+          python "MODELO15(3).py" --data data/acciones_merged --model-out models
+
+      - name: Subir artefactos
+        uses: actions/upload-artifact@v4
+        with:
+          name: modelo_y_reportes
+          path: |
+            models/
+            *.png
+            *.txt
