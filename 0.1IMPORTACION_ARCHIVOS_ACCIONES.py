@@ -1,11 +1,9 @@
-import yfinance as yf
-import pandas as pd
 import os
 import time
 
-# Definir el directorio donde se guardarán los datos
-output_dir = 'C:/Users/Alex/Desktop/1. PROGRAMACION/TFG/DATOS ACCIONES DESDE YAHOO FINANCE'
-os.makedirs(output_dir, exist_ok=True)
+import yfinance as yf
+
+from pipeline_config import RAW_STOCKS_DIR, ensure_data_directories
 
 # Lista extensa de tickers de NYSE (600 tickers de ejemplo)
 nyse_tickers = [
@@ -307,5 +305,10 @@ def download_historical_data(tickers, output_directory):
         # Esperar un poco entre las solicitudes para no sobrecargar la API
         time.sleep(1)
 
-# Descargar datos para los tickers de NYSE
-download_historical_data(nyse_tickers, output_dir)
+def main():
+    ensure_data_directories()
+    download_historical_data(nyse_tickers, RAW_STOCKS_DIR)
+
+
+if __name__ == "__main__":
+    main()

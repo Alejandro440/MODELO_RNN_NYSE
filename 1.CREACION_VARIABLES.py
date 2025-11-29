@@ -1,7 +1,10 @@
 
-import pandas as pd
-import numpy as np
 import os
+
+import numpy as np
+import pandas as pd
+
+from pipeline_config import PROCESSED_STOCKS_DIR, RAW_STOCKS_DIR, ensure_data_directories
 
 def load_and_clean_data(filepath):
     data = pd.read_csv(filepath)
@@ -67,7 +70,10 @@ def process_directory(directory_path, output_directory):
             data.to_csv(output_filepath, index=False)
             print(f'Processed and saved as {output_filename}')
 
+def main():
+    ensure_data_directories()
+    process_directory(RAW_STOCKS_DIR, PROCESSED_STOCKS_DIR)
 
-directory_path = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DATOS HISTORICOS ACCIONES RAW (3)'
-output_directory = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DESCARGA DE DATOS 3/1.DATOS HISTORICOS ACCIONES PROCESADOS'
-process_directory(directory_path, output_directory)
+
+if __name__ == "__main__":
+    main()

@@ -1,7 +1,10 @@
-import pandas as pd
 import glob
-import os
 import logging
+import os
+
+import pandas as pd
+
+from pipeline_config import INDEX_PROCESSED_DIR, MERGED_WITH_INDEX_DIR, TARGET_STOCKS_DIR, ensure_data_directories
 
 def merge_stock_with_index(stocks_folder, index_file, output_folder):
     # Configurar el logger
@@ -52,9 +55,10 @@ def merge_stock_with_index(stocks_folder, index_file, output_folder):
             logging.error(f"Error al procesar el archivo {stock_file}: {e}")
 
 # Rutas de los archivos y carpetas
-stocks_folder = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DESCARGA DE DATOS 3/2.DATOS HISTORICOS ACCIONES CON VARIABLE DEPENDIENTE'
-index_file = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DATOS HISTORICOS INDICES PROCESADOS/sp500_data.csv'
-output_folder = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DESCARGA DE DATOS 3/3.DATOS HISTORICOS ACCIONES CON INDICE'
+def main():
+    ensure_data_directories()
+    merge_stock_with_index(TARGET_STOCKS_DIR, INDEX_PROCESSED_DIR / "sp500_data.csv", MERGED_WITH_INDEX_DIR)
 
-# Ejecutar la función
-merge_stock_with_index(stocks_folder, index_file, output_folder)
+
+if __name__ == "__main__":
+    main()
