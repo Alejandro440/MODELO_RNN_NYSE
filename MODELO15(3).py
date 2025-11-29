@@ -2,19 +2,25 @@
 ## LO QUE HAGO EN STE MODELO ES COGER TODOS LOS DIAS DE LA SECUENCIA MENOS EL ULTIMO Y TRATA DE ADIINAR LA TENDENCIA PARA EL DIA SIGUIENTE (que es el dia final de la secuencia)
 #  ESTE SCRIPT PINTA BIEN PERO NO TENGO MEMEORIA FUNCIONA!!!
 import os
-import pandas as pd
+
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
+import pandas as pd
 import tensorflow as tf
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import LSTM, Dense, Input, Embedding, Concatenate, Flatten, Dropout, BatchNormalization
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.regularizers import l2, l1
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.layers import (LSTM, BatchNormalization, Concatenate, Dense,
+                                     Dropout, Embedding, Flatten, Input)
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.regularizers import l1, l2
+
+from pipeline_config import MERGED_WITH_INDEX_DIR, MODEL_OUTPUT_DIR, ensure_data_directories
+
+ensure_data_directories()
 
 # Definir la ruta del directorio y listar todos los archivos CSV
-directory_path = "C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DESCARGA DE DATOS 3/3.DATOS HISTORICOS ACCIONES CON INDICE"
+directory_path = MERGED_WITH_INDEX_DIR
 csv_files = [f for f in os.listdir(directory_path) if f.endswith('.csv')]
 
 def split_data(df, train_size=2/3):
@@ -233,16 +239,14 @@ test_loss, test_accuracy = model.evaluate([all_indices_test, all_X_test, all_X_s
 print(f"Pérdida en Test: {test_loss}")
 print(f"Precisión en Test: {test_accuracy}")
 
-import os
-
 # Ruta de salida
-output_dir = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DATOS MODELOS/MODELO15(DATOS ADICIONALES)'
+output_dir = MODEL_OUTPUT_DIR
 os.makedirs(output_dir, exist_ok=True)
 
 # Guardar el modelo
-model.save(os.path.join(output_dir, 'my_model15.h5'))
+model.save(os.path.join(output_dir, 'my_model.h5'))
 # Indicar la ubicación del archivo generado
-print(f"Modelo guardado: {os.path.join(output_dir, 'my_model15.h5')}")
+print(f"Modelo guardado: {os.path.join(output_dir, 'my_model.h5')}")
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix

@@ -1,8 +1,10 @@
 
-
-import pandas as pd
-import numpy as np
 import os
+
+import numpy as np
+import pandas as pd
+
+from pipeline_config import PROCESSED_STOCKS_DIR, TARGET_STOCKS_DIR, ensure_data_directories
 
 # Función para calcular el precio de cierre promedio futuro
 def calcular_precio_cierre_promedio(precios, dia_actual, rango_dias):
@@ -63,8 +65,10 @@ def procesar_todos_los_csv(directorio, output_dir):
     archivos = [os.path.join(directorio, f) for f in os.listdir(directorio) if f.endswith('.csv')]
     for archivo in archivos:
         procesar_archivo_csv_eliminar_ultimas(archivo, output_dir)
+def main():
+    ensure_data_directories()
+    procesar_todos_los_csv(PROCESSED_STOCKS_DIR, TARGET_STOCKS_DIR)
 
 
-directorio = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DESCARGA DE DATOS 3/1.DATOS HISTORICOS ACCIONES PROCESADOS'
-output_dir = 'C:/Users/s0141677/OneDrive - THALES SA/Documents/TFG - ALEJANDRO ALONSO ANDA/DESCARGA DE DATOS/DESCARGA DE DATOS 3/2.DATOS HISTORICOS ACCIONES CON VARIABLE DEPENDIENTE'
-procesar_todos_los_csv(directorio, output_dir)
+if __name__ == "__main__":
+    main()
